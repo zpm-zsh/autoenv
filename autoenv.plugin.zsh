@@ -1,7 +1,13 @@
 #!/usr/bin/env zsh
 
-AUTOENV_AUTH_FILE=~/.autoenv_authorized
-AUTOENV_COLORED=true
+
+if [[ -z $AUTOENV_AUTH_FILE ]]; then
+    AUTOENV_AUTH_FILE=~/.autoenv_authorized
+fi
+
+if [[ -z $AUTOENV_COLORED ]]; then
+    AUTOENV_COLORED=true
+fi
 
 add_auth_file(){
   if which shasum &> /dev/null
@@ -12,7 +18,7 @@ add_auth_file(){
 }
 
 check_and_run(){
-  if [[ $AUTOENV_COLORED == true ]]
+  if [[ $COLORS == true ]]
   then
     echo -e "\033[01;38;05;34m> \033[01;31mWARNING\033[0m"
     echo -e "\033[01;38;05;34m>\033[0m \033[38;05;68mThis is the first time you are about to source \033[01;38;05;136m\"\033[01;31m$1\033[01;38;05;136m\"\033[0m"
