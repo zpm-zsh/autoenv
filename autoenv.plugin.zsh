@@ -5,8 +5,8 @@ if [[ -z $AUTOENV_AUTH_FILE ]]; then
     AUTOENV_AUTH_FILE=~/.autoenv_authorized
 fi
 
-if [[ -z $AUTOENV_COLORED ]]; then
-    AUTOENV_COLORED=true
+if [[ -z $COLORS ]]; then
+    COLORS=true
 fi
 
 add_auth_file(){
