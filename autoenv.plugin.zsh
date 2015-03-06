@@ -28,7 +28,7 @@ check_and_run(){
         then
             echo
             cp $1 /tmp/.autoenv.sh
-            pygmentize -f 256 -g /tmp/.autoenv.sh
+            `whence pygmentize` -f 256 -g /tmp/.autoenv.sh
         else
             echo -e "$fg_no_bold[green]"
             cat $1
@@ -71,38 +71,28 @@ check_and_exec(){
 }
 
 autoenv_init(){
-    _OP=$OLDPWD
-    _P=`pwd`
-    
-    if [[ -f $_OP/.out ]]
-    then
-        check_and_exec $_OP/.out
-    fi
-    
-    while [[ ! $_P == $_OP/* ]]
+    _AUTOENV_OLDPATH=$OLDPWD
+    _AUTOENV_NEWPATH=`pwd`
+
+    while [[ ! $_AUTOENV_NEWPATH == $_AUTOENV_OLDPATH* ]]
     do
-        _OP=`dirname $_OP`
-        if [[ -f $_OP/.out ]]
+        if [[ -f $_AUTOENV_OLDPATH/.out ]]
         then
-            check_and_exec $_OP/.out
+            check_and_exec $_AUTOENV_OLDPATH/.out
         fi
+        _AUTOENV_OLDPATH=`dirname $_AUTOENV_OLDPATH`
+        
     done
     
-    
-    while [[ ! $_OP == $_P  ]]
+    while [[ ! $_AUTOENV_OLDPATH == $_AUTOENV_NEWPATH  ]]
     do
-        _P=`dirname $_P`
-        if [[ -f $_P/.env ]]
+        if [[ -f $_AUTOENV_NEWPATH/.env ]]
         then
-            check_and_exec $_P/.env
+            check_and_exec $_AUTOENV_NEWPATH/.env
         fi
+        _AUTOENV_NEWPATH=`dirname $_AUTOENV_NEWPATH`
     done
-    
-    if [[ -f $_P/.env ]]
-    then
-        check_and_exec $_P/.env
-    fi
-    
+        
 }
 
 
