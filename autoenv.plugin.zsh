@@ -11,8 +11,10 @@ fi
 
 add_auth_file(){
     if which shasum &> /dev/null
-    then hash=$(shasum "$1" | cut -d' ' -f 1)
-    else hash=$(sha1sum "$1" | cut -d' ' -f 1)
+    then
+    	hash=$(shasum "$1" | cut -d' ' -f 1)
+    else
+    	hash=$(sha1sum "$1" | cut -d' ' -f 1)
     fi
     echo "$1:$hash" >> $AUTOENV_AUTH_FILE
 }
@@ -59,8 +61,10 @@ check_and_run(){
 
 check_and_exec(){
     if which shasum &> /dev/null
-    then hash=$(shasum "$1" | cut -d' ' -f 1)
-    else hash=$(sha1sum "$1" | cut -d' ' -f 1)
+    then
+    	hash=$(shasum "$1" | cut -d' ' -f 1)
+    else
+    	hash=$(sha1sum "$1" | cut -d' ' -f 1)
     fi
     if grep "$1:$hash" "$AUTOENV_AUTH_FILE" >/dev/null 2>/dev/null
     then
@@ -81,16 +85,19 @@ autoenv_init(){
             check_and_exec $_AUTOENV_OLDPATH/.out
         fi
         _AUTOENV_OLDPATH=`dirname $_AUTOENV_OLDPATH`
-        
     done
-    
+
+    if [[ $_AUTOENV_OLDPATH == '/' ]]; then
+    	_AUTOENV_OLDPATH=''
+    fi
+
     while [[ ! $_AUTOENV_OLDPATH == $_AUTOENV_NEWPATH  ]]
     do
-        if [[ -f $_AUTOENV_NEWPATH/.env ]]
+        _AUTOENV_OLDPATH=$_AUTOENV_OLDPATH$(echo -n '/'; echo ${_AUTOENV_NEWPATH#${_AUTOENV_OLDPATH}} | tr \/ "\n" | sed -n '2p' )
+        if [[ -f $_AUTOENV_OLDPATH/.env ]]
         then
-            check_and_exec $_AUTOENV_NEWPATH/.env
+            check_and_exec $_AUTOENV_OLDPATH/.env
         fi
-        _AUTOENV_NEWPATH=`dirname $_AUTOENV_NEWPATH`
     done
         
 }
