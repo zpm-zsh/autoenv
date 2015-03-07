@@ -75,33 +75,31 @@ check_and_exec(){
 }
 
 autoenv_init(){
-    _AUTOENV_OLDPATH=$OLDPWD
-    _AUTOENV_NEWPATH=`pwd`
+    _AUTOENV_OLDPATH="$OLDPWD"
+    _AUTOENV_NEWPATH="$(pwd)"
 
-    while [[ ! $_AUTOENV_NEWPATH == $_AUTOENV_OLDPATH* ]]
+    while [[ ! "$_AUTOENV_NEWPATH" == "$_AUTOENV_OLDPATH"* ]]
     do
-        if [[ -f $_AUTOENV_OLDPATH/.out ]]
+        if [[ -f "$_AUTOENV_OLDPATH/.out" ]]
         then
-            check_and_exec $_AUTOENV_OLDPATH/.out
+            check_and_exec "$_AUTOENV_OLDPATH/.out"
         fi
-        _AUTOENV_OLDPATH=`dirname $_AUTOENV_OLDPATH`
+        _AUTOENV_OLDPATH="$(dirname $_AUTOENV_OLDPATH)"
     done
 
     if [[ $_AUTOENV_OLDPATH == '/' ]]; then
     	_AUTOENV_OLDPATH=''
     fi
 
-    while [[ ! $_AUTOENV_OLDPATH == $_AUTOENV_NEWPATH  ]]
+    while [[ ! "$_AUTOENV_OLDPATH" == "$_AUTOENV_NEWPATH"  ]]
     do
-        _AUTOENV_OLDPATH=$_AUTOENV_OLDPATH$(echo -n '/'; echo ${_AUTOENV_NEWPATH#${_AUTOENV_OLDPATH}} | tr \/ "\n" | sed -n '2p' )
-        if [[ -f $_AUTOENV_OLDPATH/.env ]]
+        _AUTOENV_OLDPATH="$_AUTOENV_OLDPATH$(echo -n '/'; echo ${_AUTOENV_NEWPATH#${_AUTOENV_OLDPATH}} | tr \/ "\n" | sed -n '2p' )"
+        if [[ -f "$_AUTOENV_OLDPATH/.env" ]]
         then
-            check_and_exec $_AUTOENV_OLDPATH/.env
+            check_and_exec "$_AUTOENV_OLDPATH/.env"
         fi
     done
         
 }
-
-
 
 chpwd_functions+=( autoenv_init )
