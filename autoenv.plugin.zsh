@@ -102,4 +102,9 @@ autoenv_init(){
         
 }
 
+if [[ -f "./.env" ]]
+then
+    check_and_exec "./.env"
+fi
+
 chpwd_functions+=( autoenv_init )
