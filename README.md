@@ -19,9 +19,9 @@ This plugin support for enter and leave events. By default `.env` is used for en
 
 - If you are in the directory `/` and execute `cd /home/user/dir1` this plugin will source following files if they exist 
 ```
-/home/user/dir1/.env
-/home/user/.env
 /home/.env
+/home/user/.env
+/home/user/dir1/.env
 ```
 
 - If you are in the directory `/home/user/dir1` and execute `cd /` this plugin will source following files if they exist 
