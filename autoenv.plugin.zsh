@@ -29,8 +29,7 @@ check_and_run(){
         if hash pygmentize 2>/dev/null
         then
             echo
-            cp $1 /tmp/.autoenv.sh
-            `whence pygmentize` -f 256 -g /tmp/.autoenv.sh
+            `whence pygmentize` -f 256 -l shell -g "$1"
         else
             echo -e "$fg_no_bold[green]"
             cat $1
