@@ -56,7 +56,7 @@ Add `Plug horosgrisa/autoenv` into `.zshrc`
 
 ### Using [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
 
-Execute `git clone https://github.com/horosgrisa/autoenv ~/.oh-my-zsh/custom/plugins`. Add `autoenv` into plugins array in `.zshrc`
+Execute `git clone https://github.com/horosgrisa/autoenv ~/.oh-my-zsh/custom/plugins/autoenv`. Add `autoenv` into plugins array in `.zshrc`
 
 ### Using [antigen](https://github.com/zsh-users/antigen)
 
