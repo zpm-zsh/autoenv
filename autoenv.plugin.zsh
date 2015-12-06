@@ -12,9 +12,9 @@ fi
 add_auth_file(){
     if which shasum &> /dev/null
     then
-    	hash=$(shasum "$1" | cut -d' ' -f 1)
+        hash=$(shasum "$1" | cut -d' ' -f 1)
     else
-    	hash=$(sha1sum "$1" | cut -d' ' -f 1)
+        hash=$(sha1sum "$1" | cut -d' ' -f 1)
     fi
     echo "$1:$hash" >> $AUTOENV_AUTH_FILE
 }
@@ -54,20 +54,24 @@ check_and_run(){
     if [[ "$answer" == "y" ]] || [[ "$answer" == "Y" ]]
     then
         add_auth_file $1
-        source $1
+        envfile=$1
+        shift
+        source $envfile
     fi
 }
 
 check_and_exec(){
     if which shasum &> /dev/null
     then
-    	hash=$(shasum "$1" | cut -d' ' -f 1)
+        hash=$(shasum "$1" | cut -d' ' -f 1)
     else
-    	hash=$(sha1sum "$1" | cut -d' ' -f 1)
+        hash=$(sha1sum "$1" | cut -d' ' -f 1)
     fi
     if grep "$1:$hash" "$AUTOENV_AUTH_FILE" >/dev/null 2>/dev/null
     then
-        source $1
+        envfile=$1
+        shift
+        source $envfile
     else
         check_and_run $1
     fi
@@ -87,7 +91,7 @@ autoenv_init(){
     done
 
     if [[ $_AUTOENV_OLDPATH == '/' ]]; then
-    	_AUTOENV_OLDPATH=''
+        _AUTOENV_OLDPATH=''
     fi
 
     while [[ ! "$_AUTOENV_OLDPATH" == "$_AUTOENV_NEWPATH"  ]]
