@@ -9,16 +9,6 @@ if [[ -z $COLORS ]]; then
     COLORS=true
 fi
 
-add_auth_file(){
-    if which shasum &> /dev/null
-    then
-        hash=$(shasum "$1" | cut -d' ' -f 1)
-    else
-        hash=$(sha1sum "$1" | cut -d' ' -f 1)
-    fi
-    echo "$1:$hash" >> $AUTOENV_AUTH_FILE
-}
-
 check_and_run(){
     if [[ $COLORS == true ]]
     then
@@ -53,7 +43,7 @@ check_and_run(){
     read answer
     if [[ "$answer" == "y" ]] || [[ "$answer" == "Y" ]]
     then
-        add_auth_file $1
+        echo "$1:$2" >> $AUTOENV_AUTH_FILE
         envfile=$1
         shift
         source $envfile
@@ -73,7 +63,7 @@ check_and_exec(){
         shift
         source $envfile
     else
-        check_and_run $1
+        check_and_run $1 $hash
     fi
 }
 
