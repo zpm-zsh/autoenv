@@ -9,6 +9,14 @@ if [[ -z $COLORS ]]; then
     COLORS=true
 fi
 
+if [[ -z $AUTOENV_IN_FILE ]]; then
+  AUTOENV_IN_FILE=".env"
+fi
+
+if [[ -z $AUTOENV_OUT_FILE ]]; then
+  AUTOENV_OUT_FILE=".out"
+fi
+
 check_and_run(){
     if [[ $COLORS == true ]]
     then
@@ -73,9 +81,9 @@ autoenv_init(){
 
     while [[ ! "$_AUTOENV_NEWPATH" == "$_AUTOENV_OLDPATH"* ]]
     do
-        if [[ -f "$_AUTOENV_OLDPATH/.out" ]]
+        if [[ -f "$_AUTOENV_OLDPATH/$AUTOENV_OUT_FILE" ]]
         then
-            check_and_exec "$_AUTOENV_OLDPATH/.out"
+            check_and_exec "$_AUTOENV_OLDPATH/$AUTOENV_OUT_FILE"
         fi
         _AUTOENV_OLDPATH="$(dirname $_AUTOENV_OLDPATH)"
     done
@@ -87,17 +95,17 @@ autoenv_init(){
     while [[ ! "$_AUTOENV_OLDPATH" == "$_AUTOENV_NEWPATH"  ]]
     do
         _AUTOENV_OLDPATH="$_AUTOENV_OLDPATH$(echo -n '/'; echo ${_AUTOENV_NEWPATH#${_AUTOENV_OLDPATH}} | tr \/ "\n" | sed -n '2p' )"
-        if [[ -f "$_AUTOENV_OLDPATH/.env" ]]
+        if [[ -f "$_AUTOENV_OLDPATH/$AUTOENV_IN_FILE" ]]
         then
-            check_and_exec "$_AUTOENV_OLDPATH/.env"
+            check_and_exec "$_AUTOENV_OLDPATH/$AUTOENV_IN_FILE"
         fi
     done
-        
+
 }
 
-if [[ -f "./.env" ]]
+if [[ -f "./$AUTOENV_IN_FILE" ]]
 then
-    check_and_exec "./.env"
+    check_and_exec "./$AUTOENV_IN_FILE"
 fi
 
 chpwd_functions+=( autoenv_init )
