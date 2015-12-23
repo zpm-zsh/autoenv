@@ -5,9 +5,12 @@ Autoenv
 
 This plugin support for enter and leave events. By default `.env` is used for entering, and `.out` for leaving. And you can set variable `COLORS=true` for enabling colored output.
 
+The environment variables `$AUTOENV_IN_FILE` & `$AUTOENV_OUT_FILE` can be used
+to override the default values for the names of `.env` & `.out` respectively.
+
 ## Example of use
 
-- If you are in the directory `/home/user/dir1` and execute `cd /var/www/myproject` this plugin will source following files if they exist 
+- If you are in the directory `/home/user/dir1` and execute `cd /var/www/myproject` this plugin will source following files if they exist
 ```
 /home/user/dir1/.out
 /home/user/.out
@@ -17,14 +20,14 @@ This plugin support for enter and leave events. By default `.env` is used for en
 /var/www/myproject/.env
 ```
 
-- If you are in the directory `/` and execute `cd /home/user/dir1` this plugin will source following files if they exist 
+- If you are in the directory `/` and execute `cd /home/user/dir1` this plugin will source following files if they exist
 ```
 /home/.env
 /home/user/.env
 /home/user/dir1/.env
 ```
 
-- If you are in the directory `/home/user/dir1` and execute `cd /` this plugin will source following files if they exist 
+- If you are in the directory `/home/user/dir1` and execute `cd /` this plugin will source following files if they exist
 ```
 /home/user/dir1/.out
 /home/user/.out
