@@ -108,4 +108,8 @@ then
     check_and_exec "./$AUTOENV_IN_FILE"
 fi
 
+() {
+    local OLDPWD='/'
+    autoenv_init
+}
 chpwd_functions+=( autoenv_init )
