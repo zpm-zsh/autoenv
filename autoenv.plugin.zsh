@@ -103,10 +103,10 @@ autoenv_init(){
 
 }
 
-if [[ -f "./$AUTOENV_IN_FILE" ]]
-then
-    check_and_exec "./$AUTOENV_IN_FILE"
-fi
+#if [[ -f "./$AUTOENV_IN_FILE" ]]
+#then
+#    check_and_exec "./$AUTOENV_IN_FILE"
+#fi
 
 () {
     local OLDPWD='/'
