@@ -103,13 +103,11 @@ autoenv_init(){
 
 }
 
-#if [[ -f "./$AUTOENV_IN_FILE" ]]
-#then
-#    check_and_exec "./$AUTOENV_IN_FILE"
-#fi
-
-() {
+_autoenv_first_run(){
     local OLDPWD='/'
     autoenv_init
+    precmd_functions=(${precmd_functions#_autoenv_first_run})
 }
-chpwd_functions+=( autoenv_init )
+
+precmd_functions+=(_autoenv_first_run)
+chpwd_functions+=(autoenv_init)
