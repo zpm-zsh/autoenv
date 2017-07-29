@@ -63,7 +63,7 @@ Execute `git clone https://github.com/horosgrisa/autoenv ~/.oh-my-zsh/custom/plu
 
 ### Using [antigen](https://github.com/zsh-users/antigen)
 
-Add `antigen-bundle horosgrisa/autoenv` into `.zshrc`
+Add `antigen bundle horosgrisa/autoenv` into `.zshrc`
 
 ### Using [zgen](https://github.com/tarjoilija/zgen)
 
