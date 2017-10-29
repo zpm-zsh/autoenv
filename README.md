@@ -57,7 +57,7 @@ export PATH=$OLDPATH
 
 ### Using [ZPM](https://github.com/horosgrisa/ZPM)
 
-Add `Plug horosgrisa/autoenv` into `.zshrc`
+Add `zpm load horosgrisa/autoenv` into `.zshrc`
 
 ### Using [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
 
