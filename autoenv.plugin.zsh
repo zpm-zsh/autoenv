@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-
+# vim: ts=2 sw=2
 
 if [[ -z $AUTOENV_AUTH_FILE ]]; then
   AUTOENV_AUTH_FILE=~/.autoenv_authorized
@@ -71,27 +71,46 @@ check_and_exec(){
 }
 
 autoenv_chdir(){
-  _AUTOENV_OLDPATH="$OLDPWD/"
-  _AUTOENV_NEWPATH="$(pwd)/"
+  local IFS=/
+  local old=( $(echo "$OLDPWD") )
+  local new=( $(echo "$(pwd)") )
+  old=( $old[@] ) # drop empty elements
+  new=( $new[@] )
 
-  while [[ ! "$_AUTOENV_NEWPATH" == "$_AUTOENV_OLDPATH"* ]]; do
-    if [[ -f "$_AUTOENV_OLDPATH/$AUTOENV_OUT_FILE" ]]; then
-      check_and_exec "$_AUTOENV_OLDPATH/$AUTOENV_OUT_FILE"
+  local concat=( $old $(echo "${new#$old}") ) # this may introduce empty elements
+  concat=( $concat[@] ) # so we remove them
+
+#  echo "out old $#old $old"
+#  echo "out new $#new $new"
+#  echo "out cmp $concat == $new"
+
+  while [[ ! "$concat" == "$new" ]] do
+    if [[ -f "/$old/$AUTOENV_OUT_FILE" ]]; then
+      check_and_exec "/$old/$AUTOENV_OUT_FILE"
     fi
-    _AUTOENV_OLDPATH="$(dirname $_AUTOENV_OLDPATH)"
+    old=( $old[0,-2] )
+    concat=( $old $(echo "${new#$old}") )
+    concat=( $concat[@] )
+#    echo "out old $#old $old"
+#    echo "out new $#new $new"
+#    echo "out cmp $concat == $new"
   done
 
-  if [[ $_AUTOENV_OLDPATH == '/' ]]; then
-    _AUTOENV_OLDPATH=''
-  fi
+#  echo "in  old $#old $old"
+#  echo "in  new $#new $new"
+#  echo "in  cmp $old == $new"
 
-  while [[ ! "$_AUTOENV_OLDPATH" == "$_AUTOENV_NEWPATH"  ]]; do
-    _AUTOENV_OLDPATH="$_AUTOENV_OLDPATH$(echo -n '/'; echo ${_AUTOENV_NEWPATH#${_AUTOENV_OLDPATH}} | tr \/ "\n" | sed -n '2p' )"
-    if [[ -f "$_AUTOENV_OLDPATH/$AUTOENV_IN_FILE" ]]; then
-      check_and_exec "$_AUTOENV_OLDPATH/$AUTOENV_IN_FILE"
+  while [[ ! "$old" == "$new" ]]; do
+    old+=($new[((1 + $#old))]) # append next element
+
+#    echo "in  old $#old $old"
+#    echo "in  new $#new $new"
+#    echo "in  cmp $old == $new"
+
+    if [[ -f "/$old/$AUTOENV_IN_FILE" ]]; then
+      check_and_exec "/$old/$AUTOENV_IN_FILE"
     fi
   done
-
 }
 
 _autoenv_first_run(){
@@ -99,6 +118,5 @@ _autoenv_first_run(){
   autoenv_chdir
   precmd_functions=(${precmd_functions#_autoenv_first_run})
 }
-
 precmd_functions+=(_autoenv_first_run)
 chpwd_functions+=(autoenv_chdir)
