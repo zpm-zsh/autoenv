@@ -81,10 +81,6 @@ autoenv_chdir(){
   local concat=( $old $(echo "${new#$old}") ) # this may introduce empty elements
   concat=( $concat[@] ) # so we remove them
 
-#  echo "out old $#old $old"
-#  echo "out new $#new $new"
-#  echo "out cmp $concat == $new"
-
   while [[ ! "$concat" == "$new" ]] do
     if [[ -f "/$old/$AUTOENV_OUT_FILE" ]]; then
       check_and_exec "/$old/$AUTOENV_OUT_FILE"
@@ -92,22 +88,10 @@ autoenv_chdir(){
     old=( $old[0,-2] )
     concat=( $old $(echo "${new#$old}") )
     concat=( $concat[@] )
-#    echo "out old $#old $old"
-#    echo "out new $#new $new"
-#    echo "out cmp $concat == $new"
   done
-
-#  echo "in  old $#old $old"
-#  echo "in  new $#new $new"
-#  echo "in  cmp $old == $new"
 
   while [[ ! "$old" == "$new" ]]; do
     old+=($new[((1 + $#old))]) # append next element
-
-#    echo "in  old $#old $old"
-#    echo "in  new $#new $new"
-#    echo "in  cmp $old == $new"
-
     if [[ -f "/$old/$AUTOENV_IN_FILE" ]]; then
       check_and_exec "/$old/$AUTOENV_IN_FILE"
     fi
