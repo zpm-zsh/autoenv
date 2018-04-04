@@ -56,6 +56,7 @@ check_and_run(){
 }
 
 check_and_exec(){
+  local IFS=$' \t\n'
   if which shasum &> /dev/null; then
     hash=$(shasum "$1" | cut -d' ' -f 1)
   else
