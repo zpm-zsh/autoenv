@@ -25,7 +25,7 @@ check_and_run(){
     echo -e "$fg_no_bold[green]----------------$reset_color"
     if hash pygmentize 2>/dev/null; then
       echo
-      `whence pygmentize` -f 256 -l shell -g "$1"
+      `whence pygmentize` -f console16m -l shell "$1"
     else
       echo -e "$fg_no_bold[green]"
       cat $1
