@@ -1,11 +1,13 @@
 # Autoenv
 
-#### Autoenv automatically sources (known/whitelisted) `.env` and `.out` files.
+Until recently, the default name was `.env`, but now it is `.in`. This is done in order not to conflict with `.env` files from numerous projects.
 
-This plugin support for enter and leave events. By default `.env` is used for entering, and `.out` for leaving. And you can set variable `CLICOLOR=1` for enabling colored output.
+#### Autoenv automatically sources (known/whitelisted) `.in` and `.out` files.
+
+This plugin support for enter and leave events. By default `.in` is used for entering, and `.out` for leaving. And you can set variable `CLICOLOR=1` for enabling colored output.
 
 The environment variables `$AUTOENV_IN_FILE` & `$AUTOENV_OUT_FILE` can be used
-to override the default values for the names of `.env` & `.out` respectively.
+to override the default values for the names of `.in` & `.out` respectively.
 
 ![](term.png)
 
@@ -17,17 +19,17 @@ to override the default values for the names of `.env` & `.out` respectively.
 /home/user/dir1/.out
 /home/user/.out
 /home/.out
-/var/.env
-/var/www/.env
-/var/www/myproject/.env
+/var/.in
+/var/www/.in
+/var/www/myproject/.in
 ```
 
 - If you are in the directory `/` and execute `cd /home/user/dir1` this plugin will source following files if they exist
 
 ```
-/home/.env
-/home/user/.env
-/home/user/dir1/.env
+/home/.in
+/home/user/.in
+/home/user/dir1/.in
 ```
 
 - If you are in the directory `/home/user/dir1` and execute `cd /` this plugin will source following files if they exist
@@ -38,9 +40,11 @@ to override the default values for the names of `.env` & `.out` respectively.
 /home/.out
 ```
 
-## Example of `.env` and `.out` files useful for node.js developing
+## Examples of `.in` and `.out` files
 
-### .env
+### For node.js developing:
+
+### .in
 
 ```sh
 nvm use node

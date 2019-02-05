@@ -10,7 +10,7 @@ if [[ -z $CLICOLOR ]]; then
 fi
 
 if [[ -z $AUTOENV_IN_FILE ]]; then
-  AUTOENV_IN_FILE=".env"
+  AUTOENV_IN_FILE=".in"
 fi
 
 if [[ -z $AUTOENV_OUT_FILE ]]; then
