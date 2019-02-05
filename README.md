@@ -61,6 +61,13 @@ export PATH=$OLDPATH
 
 ```
 
+### For projects with `.env` or/and `.env.local`
+
+```sh
+source .env*
+```
+
+
 ## Installation
 
 ### Using [zpm](https://github.com/zpm-zsh/zpm)
