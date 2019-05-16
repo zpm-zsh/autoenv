@@ -1,24 +1,28 @@
 #!/usr/bin/env zsh
 # vim: ts=2 sw=2
 
-if [[ -z $AUTOENV_AUTH_FILE ]]; then
+if [[ -z "$AUTOENV_AUTH_FILE" ]]; then
   AUTOENV_AUTH_FILE=~/.autoenv_authorized
 fi
 
-if [[ -z $CLICOLOR ]]; then
+if [[ ! -e "$AUTOENV_AUTH_FILE" ]]; then
+  touch "$AUTOENV_AUTH_FILE"
+fi
+
+if [[ -z "$CLICOLOR" ]]; then
   CLICOLOR=1
 fi
 
-if [[ -z $AUTOENV_IN_FILE ]]; then
+if [[ -z "$AUTOENV_IN_FILE" ]]; then
   AUTOENV_IN_FILE=".in"
 fi
 
-if [[ -z $AUTOENV_OUT_FILE ]]; then
+if [[ -z "$AUTOENV_OUT_FILE" ]]; then
   AUTOENV_OUT_FILE=".out"
 fi
 
 check_and_run(){
-  if [[ $CLICOLOR = 1 ]]; then
+  if [[ "$CLICOLOR" = 1 ]]; then
     echo -e "$fg_no_bold[green]> $fg_no_bold[red]WARNING$reset_color"
     echo -e "$fg_no_bold[green]> $fg_no_bold[blue]This is the first time you are about to source $fg_no_bold[yellow]\"$fg_bold[red]$1$fg_no_bold[yellow]\"$reset_color"
     echo
