@@ -5,6 +5,11 @@ if [[ -z "$AUTOENV_AUTH_FILE" ]]; then
   AUTOENV_AUTH_FILE=~/.autoenv_authorized
 fi
 
+# Check if $AUTOENV_AUTH_FILE is a symlink.
+if [[ -L $AUTOENV_AUTH_FILE ]]; then
+  AUTOENV_AUTH_FILE=$(readlink $AUTOENV_AUTH_FILE)
+fi
+
 if [[ ! -e "$AUTOENV_AUTH_FILE" ]]; then
   touch "$AUTOENV_AUTH_FILE"
 fi
