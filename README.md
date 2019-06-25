@@ -42,6 +42,8 @@ to override the default values for the names of `.in` & `.out` respectively.
 
 ## Examples of `.in` and `.out` files
 
+Please, don't use `pwd` or `$PWD`, instead of this use `$(dirname $0)`
+
 ### For node.js developing:
 
 ### .in
@@ -49,7 +51,7 @@ to override the default values for the names of `.in` & `.out` respectively.
 ```sh
 nvm use node
 OLDPATH=$PATH
-export PATH=`pwd`/node_modules/.bin:$PATH
+export PATH="$(dirname $0)/node_modules/.bin":$PATH
 
 ```
 
@@ -64,7 +66,7 @@ export PATH=$OLDPATH
 ### For projects with `.env` or/and `.env.local`
 
 ```sh
-source .env*
+source $(dirname $0)/.env*
 ```
 
 
