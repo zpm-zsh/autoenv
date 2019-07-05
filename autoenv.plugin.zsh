@@ -71,7 +71,7 @@ check_and_exec(){
   else
     hash=$(sha1sum "$1" | cut -d' ' -f 1)
   fi
-  if grep --quiet "$1:$hash" "$AUTOENV_AUTH_FILE"; then
+  if grep -q "$1:$hash" "$AUTOENV_AUTH_FILE"; then
     envfile=$1
     shift
     source $envfile
