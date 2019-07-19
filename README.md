@@ -72,6 +72,12 @@ source $(dirname $0)/.env*
 
 ## Installation
 
+#### This plugin depends on [zsh-colors](https://github.com/zpm-zsh/colors).
+
+If you don't use [zpm](https://github.com/zpm-zsh/zpm), install it manually and activate it before this plugin. 
+If you use zpm you don’t need to do anything
+
+
 ### Using [zpm](https://github.com/zpm-zsh/zpm)
 
 Add `zpm load zpm-zsh/autoenv` into `.zshrc`

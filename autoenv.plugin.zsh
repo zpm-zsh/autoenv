@@ -1,9 +1,16 @@
 #!/usr/bin/env zsh
 # vim: ts=2 sw=2
 
-if [[ -z "$AUTOENV_AUTH_FILE" ]]; then
-  AUTOENV_AUTH_FILE=~/.autoenv_authorized
+DEPENDENCES_ZSH+=( zpm-zsh/colors )
+
+if command -v zpm >/dev/null; then
+  zpm zpm-zsh/colors
 fi
+
+: ${AUTOENV_AUTH_FILE:="$HOME/.autoenv_authorized"}
+: ${AUTOENV_IN_FILE:=".in"}
+: ${AUTOENV_OUT_FILE:=".out"}
+: ${CLICOLOR:="1"}
 
 # Check if $AUTOENV_AUTH_FILE is a symlink.
 if [[ -L $AUTOENV_AUTH_FILE ]]; then
@@ -14,35 +21,24 @@ if [[ ! -e "$AUTOENV_AUTH_FILE" ]]; then
   touch "$AUTOENV_AUTH_FILE"
 fi
 
-if [[ -z "$CLICOLOR" ]]; then
-  CLICOLOR=1
-fi
-
-if [[ -z "$AUTOENV_IN_FILE" ]]; then
-  AUTOENV_IN_FILE=".in"
-fi
-
-if [[ -z "$AUTOENV_OUT_FILE" ]]; then
-  AUTOENV_OUT_FILE=".out"
-fi
-
 check_and_run(){
   if [[ "$CLICOLOR" = 1 ]]; then
-    echo -e "$fg_no_bold[green]> $fg_no_bold[red]WARNING$reset_color"
-    echo -e "$fg_no_bold[green]> $fg_no_bold[blue]This is the first time you are about to source $fg_no_bold[yellow]\"$fg_bold[red]$1$fg_no_bold[yellow]\"$reset_color"
+    echo -e "$c[green]> $c[red]WARNING$c_reset"
+    echo -ne "$c[green]> $c[blue]This is the first time you are about to source "
+    echo -e "$c[yellow]\"$c[red]$c_bold$1$c[yellow]\"$c_reset"
     echo
-    echo -e "$fg_no_bold[green]----------------$reset_color"
-    if hash pygmentize 2>/dev/null; then
+    echo -e "$c[green]----------------$c_reset"
+    if hash bat 2>/dev/null; then
       echo
-      `whence pygmentize` -f console16m -l shell "$1"
+      bat --style="plain" -l bash "$1"
     else
-      echo -e "$fg_no_bold[green]"
+      echo -e "$c[green]"
       cat $1
     fi
+    echo -e "$c[green]----------------$c_reset"
     echo
-    echo -e "$fg_no_bold[green]----------------$reset_color"
-    echo
-    echo -ne "$fg_no_bold[blue]Are you sure you want to allow this? $fg[cyan]($fg_no_bold[green]y$fg[cyan]/$fg_no_bold[red]N$fg[cyan]) $reset_color"
+    echo -ne "$c[blue]Are you sure you want to allow this? "
+    echo -ne "$c[cyan]($c[green]y$c[cyan]/$c[red]N$c[cyan]) $c_reset"
   else
     echo "> WARNING"
     echo "> This is the first time you are about to source \"$1\""
@@ -112,5 +108,6 @@ _autoenv_first_run(){
   autoenv_chdir
   precmd_functions=(${precmd_functions#_autoenv_first_run})
 }
+
 precmd_functions+=(_autoenv_first_run)
 chpwd_functions+=(autoenv_chdir)
