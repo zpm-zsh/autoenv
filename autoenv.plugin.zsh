@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-# vim: ts=2 sw=2
 
 DEPENDENCES_ZSH+=( zpm-zsh/colors )
 
@@ -52,11 +51,11 @@ check_and_run(){
     echo -n "Are you sure you want to allow this? (y/N)"
   fi
   read answer
-  if [[ "$answer" == "y" ]] || [[ "$answer" == "Y" ]]; then
+  if [[ "$answer" == "y" || "$answer" == "Y" || "$answer" == "yes" ]]; then
     echo "$1:$2" >> $AUTOENV_AUTH_FILE
     envfile=$1
     shift
-    source $envfile
+    PWD=$2 source $envfile
   fi
 }
 
@@ -72,7 +71,7 @@ check_and_exec(){
     shift
     source $envfile
   else
-    check_and_run $1 $hash
+    check_and_run $1 $hash $2
   fi
 }
 
@@ -86,9 +85,9 @@ autoenv_chdir(){
   local concat=( $old $(echo "${new#$old}") ) # this may introduce empty elements
   concat=( $concat[@] ) # so we remove them
 
-  while [[ ! "$concat" == "$new" ]] do
+  while [[ ! "$concat" == "$new" ]]; do
     if [[ -f "/$old/$AUTOENV_OUT_FILE" ]]; then
-      check_and_exec "/$old/$AUTOENV_OUT_FILE"
+      check_and_exec "/$old/$AUTOENV_OUT_FILE" "/$old"
     fi
     old=( $old[0,-2] )
     concat=( $old $(echo "${new#$old}") )
@@ -106,8 +105,8 @@ autoenv_chdir(){
 _autoenv_first_run(){
   local OLDPWD=''
   autoenv_chdir
-  precmd_functions=(${precmd_functions#_autoenv_first_run})
+  add-zsh-hook -d precmd _autoenv_first_run
 }
 
-precmd_functions+=(_autoenv_first_run)
-chpwd_functions+=(autoenv_chdir)
+add-zsh-hook precmd _autoenv_first_run
+add-zsh-hook chpwd autoenv_chdir
