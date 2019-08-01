@@ -9,7 +9,6 @@ fi
 : ${AUTOENV_AUTH_FILE:="$HOME/.autoenv_authorized"}
 : ${AUTOENV_IN_FILE:=".in"}
 : ${AUTOENV_OUT_FILE:=".out"}
-: ${CLICOLOR:="1"}
 
 # Check if $AUTOENV_AUTH_FILE is a symlink.
 if [[ -L $AUTOENV_AUTH_FILE ]]; then
@@ -21,7 +20,7 @@ if [[ ! -e "$AUTOENV_AUTH_FILE" ]]; then
 fi
 
 check_and_run(){
-  if [[ "$CLICOLOR" = 1 ]]; then
+  if [[ "$CLICOLOR" != 0 ]]; then
     echo -e "${c[green]}> ${c[red]}WARNING${c_reset}"
     echo -ne "${c[green]}> ${c[blue]}This is the first time you are about to source "
     echo -e "${c[yellow]}\"${c[red]}$c_bold$1${c[yellow]}\"${c_reset}"
@@ -54,8 +53,12 @@ check_and_run(){
     echo "$1:$2" >> "$AUTOENV_AUTH_FILE"
     envfile=$1
     shift
-    PWD="$2" source "$envfile"
+    PWD="$(dirname $envfile)" source "$envfile"
   fi
+}
+
+pwd(){
+  echo "$PWD"
 }
 
 check_and_exec(){
@@ -68,9 +71,10 @@ check_and_exec(){
   if grep -q "$1:$hash" "$AUTOENV_AUTH_FILE"; then
     envfile="$1"
     shift
-    source "$envfile"
+    PWD="$(dirname $envfile)" source "$envfile"
   else
-    check_and_run "$1" "$hash" "$2"
+  echo 
+    check_and_run "$1" "$hash"
   fi
 }
 
