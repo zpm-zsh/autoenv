@@ -42,8 +42,6 @@ to override the default values for the file names of `.in` & `.out` respectively
 
 ## Examples of `.in` and `.out` files
 
-Please, don't use `pwd` or `$PWD`, instead of this use `$(dirname $0)`
-
 ### For node.js developing:
 
 ### .in
