@@ -10,8 +10,6 @@ fi
 : ${AUTOENV_IN_FILE:=".in"}
 : ${AUTOENV_OUT_FILE:=".out"}
 
-autoload -Uz add-zsh-hook
-
 # Check if $AUTOENV_AUTH_FILE is a symlink.
 if [[ -L $AUTOENV_AUTH_FILE ]]; then
   AUTOENV_AUTH_FILE=$(readlink $AUTOENV_AUTH_FILE)
@@ -113,5 +111,7 @@ _autoenv_first_run(){
   add-zsh-hook -d precmd _autoenv_first_run
 }
 
+
+autoload -Uz add-zsh-hook
 add-zsh-hook precmd _autoenv_first_run
 add-zsh-hook chpwd autoenv_chdir
