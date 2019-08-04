@@ -73,7 +73,7 @@ check_and_exec(){
     shift
     PWD="$(dirname $envfile)" source "$envfile"
   else
-  echo 
+  echo
     check_and_run "$1" "$hash"
   fi
 }
@@ -111,5 +111,6 @@ _autoenv_first_run(){
   add-zsh-hook -d precmd _autoenv_first_run
 }
 
+autoload -Uz add-zsh-hook
 add-zsh-hook precmd _autoenv_first_run
 add-zsh-hook chpwd autoenv_chdir
