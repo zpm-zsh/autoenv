@@ -10,6 +10,8 @@ fi
 : ${AUTOENV_IN_FILE:=".in"}
 : ${AUTOENV_OUT_FILE:=".out"}
 
+autoload -Uz add-zsh-hook
+
 # Check if $AUTOENV_AUTH_FILE is a symlink.
 if [[ -L $AUTOENV_AUTH_FILE ]]; then
   AUTOENV_AUTH_FILE=$(readlink $AUTOENV_AUTH_FILE)
