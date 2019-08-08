@@ -20,34 +20,22 @@ if [[ ! -e "$AUTOENV_AUTH_FILE" ]]; then
 fi
 
 check_and_run(){
-  if [[ "$CLICOLOR" != 0 ]]; then
-    echo -e "${c[green]}> ${c[red]}WARNING${c_reset}"
-    echo -ne "${c[green]}> ${c[blue]}This is the first time you are about to source "
-    echo -e "${c[yellow]}\"${c[red]}$c_bold$1${c[yellow]}\"${c_reset}"
+  echo -e "${c[green]}> ${c[red]}WARNING${c_reset}"
+  echo -ne "${c[green]}> ${c[blue]}This is the first time you are about to source "
+  echo -e "${c[yellow]}\"${c[red]}$c_bold$1${c[yellow]}\"${c_reset}"
+  echo
+  echo -e "${c[green]}----------------${c_reset}"
+  if hash bat 2>/dev/null; then
     echo
-    echo -e "${c[green]}----------------${c_reset}"
-    if hash bat 2>/dev/null; then
-      echo
-      bat --style="plain" -l bash "$1"
-    else
-      echo -e "${c[green]}"
-      cat "$1"
-    fi
-    echo -e "${c[green]}----------------${c_reset}"
-    echo
-    echo -ne "${c[blue]}Are you sure you want to allow this? "
-    echo -ne "${c[cyan]}(${c[green]}y${c[cyan]}/${c[red]}N${c[cyan]}) ${c_reset}"
+    bat --style="plain" -l bash "$1"
   else
-    echo "> WARNING"
-    echo "> This is the first time you are about to source \"$1\""
-    echo
-    echo "----------------"
+    echo -e "${c[green]}"
     cat "$1"
-    echo
-    echo "----------------"
-    echo
-    echo -n "Are you sure you want to allow this? (y/N)"
   fi
+  echo -e "${c[green]}----------------${c_reset}"
+  echo
+  echo -ne "${c[blue]}Are you sure you want to allow this? "
+  echo -ne "${c[cyan]}(${c[green]}y${c[cyan]}/${c[red]}N${c[cyan]}) ${c_reset}"
   read -r answer
   if [[ "$answer" == "y" || "$answer" == "Y" || "$answer" == "yes" ]]; then
     echo "$1:$2" >> "$AUTOENV_AUTH_FILE"
@@ -73,7 +61,7 @@ check_and_exec(){
     shift
     PWD="$(dirname $envfile)" source "$envfile"
   else
-  echo
+    echo
     check_and_run "$1" "$hash"
   fi
 }
@@ -84,10 +72,10 @@ autoenv_chdir(){
   local new=( $(echo "$(pwd)") )
   old=( ${old[@]} ) # drop empty elements
   new=( ${new[@]} )
-
+  
   local concat=( $old $(echo "${new#$old}") ) # this may introduce empty elements
   concat=( ${concat[@]} ) # so we remove them
-
+  
   while [[ ! "$concat" == "$new" ]]; do
     if [[ -f "/$old/$AUTOENV_OUT_FILE" ]]; then
       check_and_exec "/$old/$AUTOENV_OUT_FILE" "/$old"
@@ -96,7 +84,7 @@ autoenv_chdir(){
     concat=( ${old} $(echo "${new#$old}") )
     concat=( ${concat[@]} )
   done
-
+  
   while [[ ! "$old" == "$new" ]]; do
     old+=(${new[((1 + $#old))]}) # append next element
     if [[ -f "/$old/$AUTOENV_IN_FILE" ]]; then
