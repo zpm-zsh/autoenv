@@ -2,7 +2,7 @@
 
 DEPENDENCES_ZSH+=( zpm-zsh/colors )
 
-if command -v zpm >/dev/null; then
+if (( $+functions[zpm] )); then
   zpm zpm-zsh/colors
 fi
 
@@ -12,7 +12,7 @@ fi
 
 # Check if $AUTOENV_AUTH_FILE is a symlink.
 if [[ -L $AUTOENV_AUTH_FILE ]]; then
-  AUTOENV_AUTH_FILE=$(readlink $AUTOENV_AUTH_FILE)
+  AUTOENV_AUTH_FILE=${AUTOENV_AUTH_FILE:A}
 fi
 
 if [[ ! -e "$AUTOENV_AUTH_FILE" ]]; then
@@ -41,7 +41,7 @@ check_and_run(){
     echo "$1:$2" >> "$AUTOENV_AUTH_FILE"
     envfile=$1
     shift
-    PWD="$(dirname $envfile)" source "$envfile"
+    PWD="${envfile:h}" source "$envfile"
   fi
 }
 
@@ -51,7 +51,7 @@ pwd(){
 
 check_and_exec(){
   local IFS=$' \t\n'
-  if command -v shasum &> /dev/null; then
+  if (( $+commands[shasum] )) &> /dev/null; then
     hash=$(shasum "$1" | cut -d' ' -f 1)
   else
     hash=$(sha1sum "$1" | cut -d' ' -f 1)
@@ -59,7 +59,7 @@ check_and_exec(){
   if grep -q "$1:$hash" "$AUTOENV_AUTH_FILE"; then
     envfile="$1"
     shift
-    PWD="$(dirname $envfile)" source "$envfile"
+    PWD="${envfile:h}" source "$envfile"
   else
     echo
     check_and_run "$1" "$hash"
