@@ -25,7 +25,7 @@ check_and_run(){
   echo -e "${c[yellow]}\"${c[red]}$c_bold$1${c[yellow]}\"${c_reset}"
   echo
   echo -e "${c[green]}----------------${c_reset}"
-  if hash bat 2>/dev/null; then
+  if (( $+commands[bat] )); then
     echo
     bat --style="plain" -l bash "$1"
   else
