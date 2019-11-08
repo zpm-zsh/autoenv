@@ -3,7 +3,7 @@
 DEPENDENCES_ZSH+=( zpm-zsh/colors )
 
 if (( $+functions[zpm] )); then
-  zpm zpm-zsh/colors
+  zpm zpm-zsh/colors,inline
 fi
 
 : ${AUTOENV_AUTH_FILE:="$HOME/.autoenv_authorized"}
