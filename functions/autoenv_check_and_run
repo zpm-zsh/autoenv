@@ -1,0 +1,30 @@
+#!/usr/bin/env zsh
+
+autoenv_check_and_run(){
+  echo -e "${c[green]}> ${c[red]}${c[blink]}WARNING${c_reset}"
+  echo -ne "${c[green]}> ${c[blue]}This is the first time you are about to source "
+  echo -e "${c[yellow]}\"${c[red]}${c_bold}$1${c[yellow]}\"${c_reset}"
+  echo
+  echo -e "${c[green]}----------------${c_reset}"
+
+  if (( $+commands[bat] )); then
+    echo
+    bat --style="plain" -l bash "$1"
+  else
+    echo -e "${c[green]}"
+    cat "$1"
+  fi
+
+  echo -e "${c[green]}----------------${c_reset}"
+  echo
+  echo -ne "${c[blue]}Are you sure you want to allow this? "
+  echo -ne "${c[cyan]}(${c[green]}y${c[cyan]}/${c[red]}N${c[cyan]}) ${c_reset}"
+  
+  read -r answer
+  if [[ "$answer" == "y" || "$answer" == "Y" || "$answer" == "yes" ]]; then
+    echo "$1:$2" >> "$AUTOENV_AUTH_FILE"
+    envfile=$1
+    shift
+    source "$envfile"
+  fi
+}
