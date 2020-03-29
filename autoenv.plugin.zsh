@@ -12,8 +12,8 @@ if [[ $PMSPEC != *f* ]] {
 autoload -Uz autoenv_chdir autoenv_check_and_run autoenv_check_and_exec
 
 : ${AUTOENV_AUTH_FILE:="$HOME/.autoenv_authorized"}
-: ${AUTOENV_IN_FILE:=".in"}
-: ${AUTOENV_OUT_FILE:=".out"}
+: ${AUTOENV_IN_FILE:='.in'}
+: ${AUTOENV_OUT_FILE:='.out'}
 
 # Normalize file path
 AUTOENV_AUTH_FILE=${AUTOENV_AUTH_FILE:A}
