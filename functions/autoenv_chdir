@@ -3,7 +3,7 @@
 function autoenv_chdir() {
   local IFS=/
   local old=( $(echo "$OLDPWD") )
-  local new=( $(echo "$(pwd)") )
+  local new=( $(echo "$PWD") )
   old=( ${old[@]} ) # drop empty elements
   new=( ${new[@]} )
 
