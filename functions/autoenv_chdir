@@ -1,16 +1,16 @@
 #!/usr/bin/env zsh
 
-autoenv_chdir(){
+function autoenv_chdir() {
   local IFS=/
-  local old=( $(echo "$AUTOENV_OLDPWD") )
+  local old=( $(echo "$OLDPWD") )
   local new=( $(echo "$(pwd)") )
   old=( ${old[@]} ) # drop empty elements
   new=( ${new[@]} )
-  
+
   local concat=( $old $(echo "${new#$old}") ) # this may introduce empty elements
   concat=( ${concat[@]} ) # so we remove them
-  
   while [[ ! "$concat" == "$new" ]]; do
+
     if [[ -f "/$old/$AUTOENV_OUT_FILE" ]]; then
       autoenv_check_and_exec "/$old/$AUTOENV_OUT_FILE" "/$old"
     fi
@@ -18,7 +18,7 @@ autoenv_chdir(){
     concat=( ${old} $(echo "${new#$old}") )
     concat=( ${concat[@]} )
   done
-  
+
   while [[ ! "$old" == "$new" ]]; do
     old+=(${new[((1 + $#old))]}) # append next element
     if [[ -f "/$old/$AUTOENV_IN_FILE" ]]; then

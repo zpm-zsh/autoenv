@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-autoenv_check_and_run(){
+function autoenv_check_and_run() {
   echo -e "${c[green]}> ${c[red]}${c[blink]}WARNING${c[reset]}"
   echo -ne "${c[green]}> ${c[blue]}This is the first time you are about to source "
   echo -e "${c[yellow]}\"${c[red]}${c[bold]}$1${c[yellow]}\"${c[reset]}"
@@ -19,7 +19,7 @@ autoenv_check_and_run(){
   echo
   echo -ne "${c[blue]}Are you sure you want to allow this? "
   echo -ne "${c[cyan]}(${c[green]}y${c[cyan]}/${c[red]}N${c[cyan]}) ${c[reset]}"
-  
+
   read -r answer
   if [[ "$answer" == "y" || "$answer" == "Y" || "$answer" == "yes" ]]; then
     echo "$1:$2" >> "$AUTOENV_AUTH_FILE"

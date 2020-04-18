@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-autoenv_check_and_exec(){
+function autoenv_check_and_exec() {
   local IFS=$' \t\n'
 
   if (( $+commands[shasum] )) &> /dev/null; then

@@ -26,5 +26,5 @@ fi
 autoload -Uz add-zsh-hook
 add-zsh-hook chpwd autoenv_chdir
 
-typeset -g AUTOENV_OLDPWD=''
+typeset -g OLDPWD=''
 autoenv_chdir
