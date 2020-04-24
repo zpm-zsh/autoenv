@@ -1,20 +1,18 @@
 #!/usr/bin/env zsh
 
-function autoenv_check_and_exec() {
-  local IFS=$' \t\n'
+local IFS=$' \t\n'
 
-  if (( $+commands[shasum] )) &> /dev/null; then
-    hash=$(shasum "$1" | cut -d' ' -f 1)
-  else
-    hash=$(sha1sum "$1" | cut -d' ' -f 1)
-  fi
+if (( $+commands[shasum] )) &> /dev/null; then
+  hash=$(shasum "$1" | cut -d' ' -f 1)
+else
+  hash=$(sha1sum "$1" | cut -d' ' -f 1)
+fi
 
-  if grep -q "$1:$hash" "$AUTOENV_AUTH_FILE"; then
-    envfile="$1"
-    shift
-    source "$envfile"
-  else
-    echo
-    autoenv_check_and_run "$1" "$hash"
-  fi
-}
+if grep -q "$1:$hash" "$AUTOENV_AUTH_FILE"; then
+  envfile="$1"
+  shift
+  source "$envfile"
+else
+  echo
+  autoenv_check_and_run "$1" "$hash"
+fi

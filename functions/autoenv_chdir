@@ -1,28 +1,26 @@
 #!/usr/bin/env zsh
 
-function autoenv_chdir() {
-  local IFS=/
-  local old=( $(echo "$OLDPWD") )
-  local new=( $(echo "$PWD") )
-  old=( ${old[@]} ) # drop empty elements
-  new=( ${new[@]} )
+local IFS=/
+local old=( $(echo "$OLDPWD") )
+local new=( $(echo "$PWD") )
+old=( ${old[@]} ) # drop empty elements
+new=( ${new[@]} )
 
-  local concat=( $old $(echo "${new#$old}") ) # this may introduce empty elements
-  concat=( ${concat[@]} ) # so we remove them
-  while [[ ! "$concat" == "$new" ]]; do
+local concat=( $old $(echo "${new#$old}") ) # this may introduce empty elements
+concat=( ${concat[@]} ) # so we remove them
+while [[ ! "$concat" == "$new" ]]; do
 
-    if [[ -f "/$old/$AUTOENV_OUT_FILE" ]]; then
-      autoenv_check_and_exec "/$old/$AUTOENV_OUT_FILE" "/$old"
-    fi
-    old=( ${old[0,-2]} )
-    concat=( ${old} $(echo "${new#$old}") )
-    concat=( ${concat[@]} )
-  done
+  if [[ -f "/$old/$AUTOENV_OUT_FILE" ]]; then
+    autoenv_check_and_exec "/$old/$AUTOENV_OUT_FILE" "/$old"
+  fi
+  old=( ${old[0,-2]} )
+  concat=( ${old} $(echo "${new#$old}") )
+  concat=( ${concat[@]} )
+done
 
-  while [[ ! "$old" == "$new" ]]; do
-    old+=(${new[((1 + $#old))]}) # append next element
-    if [[ -f "/$old/$AUTOENV_IN_FILE" ]]; then
-      autoenv_check_and_exec "/$old/$AUTOENV_IN_FILE"
-    fi
-  done
-}
+while [[ ! "$old" == "$new" ]]; do
+  old+=(${new[((1 + $#old))]}) # append next element
+  if [[ -f "/$old/$AUTOENV_IN_FILE" ]]; then
+    autoenv_check_and_exec "/$old/$AUTOENV_IN_FILE"
+  fi
+done
