@@ -1,6 +1,6 @@
 # Autoenv
 
-Until recently, the default file name used by this plugin was `.env`, but now it is `.in`. This is done in order not to conflict with `.env` files from numerous projects.
+> Until recently, the default file name used by this plugin was `.env`, but now it is `.in`. This is done in order not to conflict with `.env` files from numerous projects.
 
 #### Autoenv automatically sources (known/whitelisted) `.in` and `.out` files.
 
