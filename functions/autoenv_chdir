@@ -3,8 +3,8 @@
 local IFS=/
 local old=( $(echo "$OLDPWD") )
 local new=( $(echo "$PWD") )
-old=( ${old[@]} ) # drop empty elements
-new=( ${new[@]} )
+old=( ${old:#} ) # drop empty elements
+new=( ${new:#} )
 
 local concat=( $old $(echo "${new#$old}") ) # this may introduce empty elements
 concat=( ${concat[@]} ) # so we remove them
