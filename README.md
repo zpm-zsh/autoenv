@@ -42,7 +42,7 @@ to override the default values for the file names of `.in` & `.out` respectively
 
 ## Examples of `.in` and `.out` files
 
-Please, don't use `pwd` or `$PWD`, instead of this use `$(dirname $0)`
+Please, don't use `pwd` or `$PWD`, instead of this use `$(dirname $0)`. Additionally, the path of the directory being entered or exited is passed as the first argument to both `.in` and `.out` scripts, should using a symlink be preferred.
 
 ### For node.js developing:
 

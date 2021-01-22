@@ -8,11 +8,11 @@ else
   hash=$(sha1sum "$1" | cut -d' ' -f 1)
 fi
 
-if grep -q "$1:$hash" "$AUTOENV_AUTH_FILE"; then
-  envfile="$1"
-  shift
-  source "$envfile"
+local envfile="$1"
+shift
+if grep -q "$envfile:$hash" "$AUTOENV_AUTH_FILE"; then
+  source "$envfile" "$@"
 else
   echo
-  autoenv_check_and_run "$1" "$hash"
+  autoenv_check_and_run "$envfile" "$hash" "$@"
 fi
