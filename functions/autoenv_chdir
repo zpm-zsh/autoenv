@@ -21,6 +21,6 @@ done
 while [[ ! "$old" == "$new" ]]; do
   old+=(${new[((1 + $#old))]}) # append next element
   if [[ -f "/$old/$AUTOENV_IN_FILE" ]]; then
-    autoenv_check_and_exec "/$old/$AUTOENV_IN_FILE"
+    autoenv_check_and_exec "/$old/$AUTOENV_IN_FILE" "/$old"
   fi
 done

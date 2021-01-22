@@ -24,5 +24,6 @@ if [[ "$answer" == "y" || "$answer" == "Y" || "$answer" == "yes" ]]; then
   echo "$1:$2" >> "$AUTOENV_AUTH_FILE"
   envfile=$1
   shift
-  source "$envfile"
+  shift
+  source "$envfile" "$@"
 fi
