@@ -25,5 +25,5 @@ if [[ "$answer" == "y" || "$answer" == "Y" || "$answer" == "yes" ]]; then
   envfile=$1
   shift
   shift
-  source "$envfile" "$@"
+  builtin source "$envfile" "$@"
 fi

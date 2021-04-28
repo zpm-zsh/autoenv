@@ -11,7 +11,7 @@ fi
 local envfile="$1"
 shift
 if grep -q "$envfile:$hash" "$AUTOENV_AUTH_FILE"; then
-  source "$envfile" "$@"
+  builtin source "$envfile" "$@"
 else
   echo
   autoenv_check_and_run "$envfile" "$hash" "$@"
