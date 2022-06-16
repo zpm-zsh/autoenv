@@ -85,6 +85,14 @@ Add `zpm load zpm-zsh/autoenv` into `.zshrc`
 
 Execute `git clone https://github.com/zpm-zsh/autoenv ~/.oh-my-zsh/custom/plugins/autoenv`. Add `autoenv` into plugins array in `.zshrc`
 
+### Using [Fig](https://fig.io)
+
+Fig adds apps, shortcuts, and autocomplete to your existing terminal.
+
+Install `autoenv` in just one click.
+
+<a href="https://fig.io/plugins/other/autoenv_zpm-zsh" target="_blank"><img src="https://fig.io/badges/install-with-fig.svg" /></a>
+
 ### Using [antigen](https://github.com/zsh-users/antigen)
 
 Add `antigen bundle zpm-zsh/autoenv` into `.zshrc`
