@@ -8,7 +8,7 @@ echo -e "${c[green]}----------------${c[reset]}"
 
 if (( $+commands[bat] )); then
   echo
-  bat --style="plain" -l bash "$1"
+  bat --style='plain' -l bash --paging='never' "$1"
 else
   echo -e "${c[green]}"
   cat "$1"
