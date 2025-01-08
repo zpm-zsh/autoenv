@@ -5,13 +5,16 @@
 0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
 0="${${(M)0:#/*}:-$PWD/$0}"
 
+[ -z "$XDG_STATE_HOME" ]  && export XDG_STATE_HOME="$HOME/.local/state"
+
 if [[ $PMSPEC != *f* ]] {
   fpath+=( "${0:h}/functions" )
 }
 
 autoload -Uz autoenv_chdir autoenv_check_and_run autoenv_check_and_exec
 
-: ${AUTOENV_AUTH_FILE:="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/autoenv_authorized"}
+: ${AUTOENV_AUTH_FILE:="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/autoenv_authorized"}
+mkdir -p ${AUTOENV_AUTH_FILE:h}
 
 : ${AUTOENV_IN_FILE:='.in'}
 : ${AUTOENV_OUT_FILE:='.out'}
