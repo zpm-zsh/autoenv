@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+emulate -L zsh -o no_auto_pushd
+
 echo -e "${c[green]}> ${c[red]}${c[blink]}WARNING${c[reset]}"
 echo -ne "${c[green]}> ${c[blue]}This is the first time you are about to source "
 echo -e "${c[yellow]}\"${c[red]}${c[bold]}$1${c[yellow]}\"${c[reset]}"

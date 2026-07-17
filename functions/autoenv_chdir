@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+emulate -L zsh
+
 local IFS=/
 local old=( $(echo "$OLDPWD") )
 local new=( $(echo "$PWD") )

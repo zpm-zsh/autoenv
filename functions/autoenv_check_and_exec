@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+emulate -L zsh -o no_auto_pushd
+
 local IFS=$' \t\n'
 
 if (( $+commands[shasum] )) &> /dev/null; then
