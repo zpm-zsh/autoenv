@@ -27,8 +27,8 @@ if [[ "$answer" == "y" || "$answer" == "Y" || "$answer" == "yes" ]]; then
   envfile=$1
   shift
   shift
-  local _autoenv_saved_pwd=$PWD
-  local _autoenv_saved_oldpwd=$OLDPWD
+  local -Pr _autoenv_saved_pwd=$PWD
+  local -Pr _autoenv_saved_oldpwd=$OLDPWD
   add-zsh-hook -d chpwd autoenv_chdir
   builtin cd -q "${envfile:h}"
   builtin source "$envfile" "$@"

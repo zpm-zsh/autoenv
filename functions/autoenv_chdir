@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 emulate -L zsh
+zmodload zsh/param/private
 
 local IFS=/
 local old=( $(echo "$OLDPWD") )

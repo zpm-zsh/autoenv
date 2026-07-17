@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 emulate -L zsh -o no_auto_pushd
+zmodload zsh/param/private
 
 local IFS=$' \t\n'
 
@@ -14,8 +15,8 @@ local envfile="$1"
 local envdir="${envfile:h}"
 shift
 if grep -q "$envfile:$hash" "$AUTOENV_AUTH_FILE"; then
-  local _autoenv_saved_pwd=$PWD
-  local _autoenv_saved_oldpwd=$OLDPWD
+  local -Pr _autoenv_saved_pwd=$PWD
+  local -Pr _autoenv_saved_oldpwd=$OLDPWD
   add-zsh-hook -d chpwd autoenv_chdir
   builtin cd -q "$envdir"
   builtin source "$envfile" "$@"
