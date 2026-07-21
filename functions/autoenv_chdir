@@ -3,6 +3,10 @@
 emulate -L zsh
 zmodload zsh/param/private
 
+# Guard against re-entry: if an envfile being sourced runs `cd` itself, the
+# chpwd hook would call us recursively. Skip while sourcing.
+[[ -n $AUTOENV_IN_ENVFILE ]] && return
+
 local IFS=/
 local old=( $(echo "$OLDPWD") )
 local new=( $(echo "$PWD") )

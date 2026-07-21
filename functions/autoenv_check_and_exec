@@ -18,13 +18,12 @@ if grep -q "$envfile:$hash" "$AUTOENV_AUTH_FILE"; then
   {
     local -Pr _autoenv_saved_pwd=$PWD || return
     local -Pr _autoenv_saved_oldpwd=$OLDPWD || return
-    add-zsh-hook -d chpwd autoenv_chdir
+    local AUTOENV_IN_ENVFILE=1
     builtin cd -q "$envdir" || return
     builtin source "$envfile" "$@" || return
   } always {
     builtin cd -q "$_autoenv_saved_pwd"
     OLDPWD=$_autoenv_saved_oldpwd
-    add-zsh-hook chpwd autoenv_chdir
   }
 else
   echo
