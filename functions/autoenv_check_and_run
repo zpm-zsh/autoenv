@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+emulate -L zsh -o no_auto_pushd
+
 echo -e "${c[green]}> ${c[red]}${c[blink]}WARNING${c[reset]}"
 echo -ne "${c[green]}> ${c[blue]}This is the first time you are about to source "
 echo -e "${c[yellow]}\"${c[red]}${c[bold]}$1${c[yellow]}\"${c[reset]}"
@@ -25,12 +27,15 @@ if [[ "$answer" == "y" || "$answer" == "Y" || "$answer" == "yes" ]]; then
   envfile=$1
   shift
   shift
-  local _autoenv_saved_pwd=$PWD
-  local _autoenv_saved_oldpwd=$OLDPWD
-  add-zsh-hook -d chpwd autoenv_chdir
-  builtin cd -q "${envfile:h}"
-  builtin source "$envfile" "$@"
-  builtin cd -q "$_autoenv_saved_pwd"
-  OLDPWD=$_autoenv_saved_oldpwd
-  add-zsh-hook chpwd autoenv_chdir
+  {
+    local -Pr _autoenv_saved_pwd=$PWD || return
+    local -Pr _autoenv_saved_oldpwd=$OLDPWD || return
+    add-zsh-hook -d chpwd autoenv_chdir
+    builtin cd -q "${envfile:h}" || return
+    builtin source "$envfile" "$@" || return
+  } always {
+    builtin cd -q "$_autoenv_saved_pwd"
+    OLDPWD=$_autoenv_saved_oldpwd
+    add-zsh-hook chpwd autoenv_chdir
+  }
 fi
