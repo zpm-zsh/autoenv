@@ -3,6 +3,14 @@
 emulate -L zsh -o no_auto_pushd
 zmodload zsh/param/private
 
+# The prompt below reads a line from stdin. With no user at the other end there
+# is nobody to answer, and the read would swallow a line of whatever the script
+# is feeding itself. Unauthorized means no.
+if [[ ! -o interactive ]]; then
+  print -ru2 -- "autoenv: $1 is not authorized, skipping it (non-interactive shell)"
+  return 1
+fi
+
 echo -e "${c[green]}> ${c[red]}${c[blink]}WARNING${c[reset]}"
 echo -ne "${c[green]}> ${c[blue]}This is the first time you are about to source "
 echo -e "${c[yellow]}\"${c[red]}${c[bold]}$1${c[yellow]}\"${c[reset]}"

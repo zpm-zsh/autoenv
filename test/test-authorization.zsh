@@ -28,27 +28,35 @@ hash_of() {
   fi
 }
 
-# Runs a cd in a fresh shell, answering "n" to any authorization prompt, and
-# reports whether the prompt appeared and whether the envfile ran.
+# Enters a directory in a fresh shell, answering "n" to any prompt, and reports
+# whether the prompt appeared, whether the envfile ran, and whether the plugin
+# left parameters behind. `zsh -i` is needed because the prompt is only offered
+# to interactive shells, and that option cannot be set from inside a script.
 attempt() {
-  local root=$1 target=$2 authfile=$3
+  local root=$1 target=$2 authfile=$3 mode=${4:-interactive}
+  local probe=$(mktemp)
+  cat > $probe <<PROBE
+export XDG_STATE_HOME=\$(mktemp -d)
+export AUTOENV_AUTH_FILE=$authfile
+export AUTOENV_IN_FILE=.in AUTOENV_OUT_FILE=.out
+zmodload zsh/parameter
+fpath+=( $plugin/functions )
+autoload -Uz add-zsh-hook autoenv_chdir autoenv_check_and_run autoenv_check_and_exec
+add-zsh-hook chpwd autoenv_chdir
+builtin cd $root/start
+builtin cd $target
+print ""
+print "RAN=\${MARK:-no}"
+typeset -a leaks=( \${(k)parameters[(I)hash|envfile|answer]} )
+print "LEAKED=\${(j:,:)\${(o)leaks}}"
+PROBE
+
+  local -a flags=( -f )
+  [[ $mode == interactive ]] && flags+=( -i )
+
   local out
-  out=$(
-    export XDG_STATE_HOME=$(mktemp -d)
-    export AUTOENV_AUTH_FILE=$authfile
-    export AUTOENV_IN_FILE=.in AUTOENV_OUT_FILE=.out
-    zmodload zsh/parameter
-    fpath+=( $plugin/functions )
-    autoload -Uz add-zsh-hook autoenv_chdir autoenv_check_and_run autoenv_check_and_exec
-    add-zsh-hook chpwd autoenv_chdir
-    builtin cd $root/start
-    builtin cd $target
-    # the prompt ends without a newline, so start a fresh line before reporting
-    print ""
-    print "RAN=${MARK:-no}"
-    local -a leaks=( ${(k)parameters[(I)hash|envfile|answer]} )
-    print "LEAKED=${(j:,:)${(o)leaks}}"
-  ) <<< 'n' 2>&1
+  out=$(zsh $flags -c "source $probe" <<< 'n' 2>&1)
+
   local prompted=no
   [[ $out == *"first time you are about to source"* ]] && prompted=yes
   local -a lines=( ${(f)out} )
@@ -76,18 +84,42 @@ check "regex-matching sibling is not auto-authorized" \
       "prompted=yes RAN=no LEAKED=" \
       "$(attempt $root $root/a.c $authfile)"
 
-# Now authorize the deep path and check the shorter one is not covered by it.
 print -r -- "$root/nested/abc/.in:$(hash_of $root/nested/abc/.in)" > $authfile
 check "path that is a suffix of an authorized path is not auto-authorized" \
       "prompted=yes RAN=no LEAKED=" \
       "$(attempt $root $root/abc $authfile)"
 
-# Editing an approved envfile must invalidate its entry.
 print -r -- "$root/abc/.in:$(hash_of $root/abc/.in)" > $authfile
 print -r -- 'export MARK=yes; export EVIL=1' > $root/abc/.in
 check "edited envfile is re-authorized, not trusted by path" \
       "prompted=yes RAN=no LEAKED=" \
       "$(attempt $root $root/abc $authfile)"
+
+# An unauthorized envfile in a script must not ask, because nobody can answer.
+print -r -- $body > $root/abc/.in
+print -r -- "$root/nested/abc/.in:$(hash_of $root/nested/abc/.in)" > $authfile
+check "non-interactive shell does not prompt and does not run it" \
+      "prompted=no RAN=no LEAKED=" \
+      "$(attempt $root $root/abc $authfile non-interactive)"
+
+# ...and it must not eat a line of the script's own input while not asking.
+local probe=$(mktemp)
+cat > $probe <<PROBE
+export XDG_STATE_HOME=\$(mktemp -d)
+export AUTOENV_AUTH_FILE=$authfile
+export AUTOENV_IN_FILE=.in AUTOENV_OUT_FILE=.out
+fpath+=( $plugin/functions )
+autoload -Uz add-zsh-hook autoenv_chdir autoenv_check_and_run autoenv_check_and_exec
+add-zsh-hook chpwd autoenv_chdir
+builtin cd $root/start
+builtin cd $root/abc
+read -r line
+print "STDIN=\$line"
+PROBE
+local out=$(zsh -f -c "source $probe" <<< 'sentinel' 2>/dev/null)
+local -a lines=( ${(f)out} )
+check "non-interactive shell leaves the caller's stdin alone" \
+      "STDIN=sentinel" "${lines[(r)STDIN=*]}"
 
 (( failed )) && exit 1
 exit 0
