@@ -42,7 +42,9 @@ to override the default values for the file names of `.in` & `.out` respectively
 
 ## Examples of `.in` and `.out` files
 
-Please, don't use `pwd` or `$PWD`, instead of this use `$(dirname $0)`. Additionally, the path of the directory being entered or exited is passed as the first argument to both `.in` and `.out` scripts, should using a symlink be preferred.
+An envfile is sourced in the directory you moved to, not in its own. To reach files next to it use `$(dirname $0)`; the directory it belongs to is also passed as the first argument to both `.in` and `.out` scripts. Don't use `pwd` or `$PWD` for this.
+
+> Earlier versions changed into the envfile's directory before sourcing it, so `$PWD` happened to point there. Doing that disturbed the directory stack, `$OLDPWD` and `cd -`, and it no longer happens. An envfile that used relative paths needs `$(dirname $0)/` in front of them.
 
 ### For node.js developing:
 

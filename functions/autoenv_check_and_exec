@@ -13,7 +13,6 @@ else
 fi
 
 local envfile="$1"
-local envdir="${envfile:h}"
 shift
 # -x -F: the authorization file holds whole "path:hash" lines. Without them the
 # path is a regular expression matched against any part of the line, so a
@@ -25,16 +24,20 @@ if grep -qxF -- "$envfile:$hash" "$AUTOENV_AUTH_FILE"; then
     local -Pr _autoenv_saved_pwd=$PWD || return
     local -Pr _autoenv_saved_oldpwd=$OLDPWD || return
     local AUTOENV_IN_ENVFILE=1
-    builtin cd -q "$envdir" || return
     builtin source "$envfile" "$@" || return
   } always {
-    # Assigning OLDPWD is not enough: zsh tracks the previous directory
-    # internally for `cd -`, and that record is not read back from the
-    # parameter. Return via the saved OLDPWD so the internal record ends up
-    # correct too.
-    [[ -n $_autoenv_saved_oldpwd ]] && builtin cd -q "$_autoenv_saved_oldpwd" 2>/dev/null
-    builtin cd -q "$_autoenv_saved_pwd"
-    OLDPWD=$_autoenv_saved_oldpwd
+    # An envfile may cd, but it must not move the user: the walk through the
+    # path components was computed before it ran, and wherever it landed has
+    # not been processed. Nothing to undo in the usual case.
+    if [[ $PWD != $_autoenv_saved_pwd ]]; then
+      # Assigning OLDPWD is not enough: zsh tracks the previous directory
+      # internally for `cd -`, and that record is not read back from the
+      # parameter. Return via the saved OLDPWD so the internal record ends up
+      # correct too.
+      [[ -n $_autoenv_saved_oldpwd ]] && builtin cd -q "$_autoenv_saved_oldpwd" 2>/dev/null
+      builtin cd -q "$_autoenv_saved_pwd"
+      OLDPWD=$_autoenv_saved_oldpwd
+    fi
   }
 else
   echo
