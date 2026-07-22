@@ -100,3 +100,24 @@ Add `antigen bundle zpm-zsh/autoenv` into `.zshrc`
 ### Using [zgen](https://github.com/tarjoilija/zgen)
 
 Add `zgen load zpm-zsh/autoenv` into `.zshrc`
+
+## Tests
+
+```sh
+zsh test/run-tests.zsh              # everything
+zsh test/run-tests.zsh symlink      # only scenarios matching a name
+```
+
+Sourcing an envfile requires `cd`-ing into its directory, and a `cd` changes
+four separate things: `$PWD`, the `$OLDPWD` parameter, zsh's internal
+previous-directory record used by `cd -`, and the directory stack. The tests
+run a navigation scenario twice -- once with the plugin loaded and once
+without -- and require the resulting directory state to be identical, so the
+plugin cannot leave any of them behind. Each scenario also asserts exactly
+which envfiles ran, otherwise a plugin that did nothing at all would pass.
+
+To check the suite against a different checkout:
+
+```sh
+AUTOENV_TEST_PLUGIN=/path/to/autoenv zsh test/run-tests.zsh
+```
