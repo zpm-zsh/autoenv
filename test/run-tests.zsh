@@ -124,7 +124,7 @@ fi
 
 if [[ -z $filter ]]; then
   local suite out; local -i rc
-  for suite in re-entry:test-reentry.zsh authorization:test-authorization.zsh; do
+  for suite in re-entry:test-reentry.zsh authorization:test-authorization.zsh loading:test-loading.zsh; do
     print "${suite%%:*}:"
     out=$(zsh $here/${suite##*:} 2>&1) && rc=0 || rc=$?
     print -r -- "$out" | sed 's/^/  /'

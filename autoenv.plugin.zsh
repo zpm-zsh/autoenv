@@ -7,7 +7,11 @@
 
 [ -z "$XDG_STATE_HOME" ]  && export XDG_STATE_HOME="$HOME/.local/state"
 
-if [[ $PMSPEC != *f* ]] {
+# $PMSPEC containing `f` means the plugin manager has already put functions/ on
+# fpath. Some managers export PMSPEC, so a child shell inherits the claim with
+# no manager loaded and the functions never resolve -- every cd then silently
+# does nothing. Check fpath itself, which is what the claim is about anyway.
+if [[ -z ${fpath[(r)${0:h}/functions]} ]] {
   fpath+=( "${0:h}/functions" )
 }
 
