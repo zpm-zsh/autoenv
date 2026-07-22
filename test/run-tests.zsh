@@ -123,12 +123,14 @@ if (( ran )); then
 fi
 
 if [[ -z $filter ]]; then
-  print "re-entry:"
-  local reentry_out; local -i reentry_rc
-  reentry_out=$(zsh $here/test-reentry.zsh 2>&1) && reentry_rc=0 || reentry_rc=$?
-  print -r -- "$reentry_out" | sed 's/^/  /'
-  (( reentry_rc )) && (( failed++ ))
-  print
+  local suite out; local -i rc
+  for suite in re-entry:test-reentry.zsh authorization:test-authorization.zsh; do
+    print "${suite%%:*}:"
+    out=$(zsh $here/${suite##*:} 2>&1) && rc=0 || rc=$?
+    print -r -- "$out" | sed 's/^/  /'
+    (( rc )) && (( failed++ ))
+    print
+  done
 fi
 
 if (( failed )); then

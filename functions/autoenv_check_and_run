@@ -1,6 +1,7 @@
 #!/usr/bin/env zsh
 
 emulate -L zsh -o no_auto_pushd
+zmodload zsh/param/private
 
 echo -e "${c[green]}> ${c[red]}${c[blink]}WARNING${c[reset]}"
 echo -ne "${c[green]}> ${c[blue]}This is the first time you are about to source "
@@ -21,10 +22,11 @@ echo
 echo -ne "${c[blue]}Are you sure you want to allow this? "
 echo -ne "${c[cyan]}(${c[green]}y${c[cyan]}/${c[red]}N${c[cyan]}) ${c[reset]}"
 
+local answer
 read -r answer
 if [[ "$answer" == "y" || "$answer" == "Y" || "$answer" == "yes" ]]; then
-  echo "$1:$2" >> "$AUTOENV_AUTH_FILE"
-  envfile=$1
+  print -r -- "$1:$2" >> "$AUTOENV_AUTH_FILE"
+  local envfile=$1
   shift
   shift
   {

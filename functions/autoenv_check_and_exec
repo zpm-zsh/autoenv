@@ -5,6 +5,7 @@ zmodload zsh/param/private
 
 local IFS=$' \t\n'
 
+local hash
 if (( $+commands[shasum] )) &> /dev/null; then
   hash=$(shasum "$1" | cut -d' ' -f 1)
 else
@@ -14,7 +15,12 @@ fi
 local envfile="$1"
 local envdir="${envfile:h}"
 shift
-if grep -q "$envfile:$hash" "$AUTOENV_AUTH_FILE"; then
+# -x -F: the authorization file holds whole "path:hash" lines. Without them the
+# path is a regular expression matched against any part of the line, so a
+# directory named to match an authorized one -- `a.c` against `abc` -- would be
+# sourced without asking. Same content, but from the attacker's directory, and
+# envfiles resolve their paths relative to themselves.
+if grep -qxF -- "$envfile:$hash" "$AUTOENV_AUTH_FILE"; then
   {
     local -Pr _autoenv_saved_pwd=$PWD || return
     local -Pr _autoenv_saved_oldpwd=$OLDPWD || return

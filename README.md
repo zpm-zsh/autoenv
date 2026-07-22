@@ -116,6 +116,9 @@ without -- and require the resulting directory state to be identical, so the
 plugin cannot leave any of them behind. Each scenario also asserts exactly
 which envfiles ran, otherwise a plugin that did nothing at all would pass.
 
+The remaining suites cover re-entry (an envfile that runs its own `cd`) and
+authorization (which envfiles are allowed to run at all).
+
 To check the suite against a different checkout:
 
 ```sh
