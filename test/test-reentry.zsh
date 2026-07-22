@@ -21,7 +21,7 @@ check() {
     print "PASS  $label"
   else
     print "FAIL  $label -- want '$want' got '$got'"
-    (( failed++ ))
+    (( ++failed ))
   fi
 }
 

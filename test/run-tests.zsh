@@ -128,7 +128,7 @@ if [[ -z $filter ]]; then
     print "${suite%%:*}:"
     out=$(zsh $here/${suite##*:} 2>&1) && rc=0 || rc=$?
     print -r -- "$out" | sed 's/^/  /'
-    (( rc )) && (( failed++ ))
+    (( rc )) && (( ++failed ))
     print
   done
 fi
