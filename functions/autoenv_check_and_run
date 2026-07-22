@@ -34,6 +34,11 @@ if [[ "$answer" == "y" || "$answer" == "Y" || "$answer" == "yes" ]]; then
     builtin cd -q "${envfile:h}" || return
     builtin source "$envfile" "$@" || return
   } always {
+    # Assigning OLDPWD is not enough: zsh tracks the previous directory
+    # internally for `cd -`, and that record is not read back from the
+    # parameter. Return via the saved OLDPWD so the internal record ends up
+    # correct too.
+    [[ -n $_autoenv_saved_oldpwd ]] && builtin cd -q "$_autoenv_saved_oldpwd" 2>/dev/null
     builtin cd -q "$_autoenv_saved_pwd"
     OLDPWD=$_autoenv_saved_oldpwd
   }
