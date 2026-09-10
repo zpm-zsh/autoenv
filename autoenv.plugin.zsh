@@ -18,8 +18,6 @@ if [[ -z ${fpath[(r)${0:h}/functions]} ]] {
 autoload -Uz autoenv_chdir autoenv_check_and_run autoenv_check_and_exec
 
 : ${AUTOENV_AUTH_FILE:="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/autoenv_authorized"}
-mkdir -p ${AUTOENV_AUTH_FILE:h}
-
 : ${AUTOENV_IN_FILE:='.in'}
 : ${AUTOENV_OUT_FILE:='.out'}
 
@@ -30,7 +28,7 @@ mkdir -p ${AUTOENV_AUTH_FILE:h}
 
 # Create file it if it doesn't exist
 if [[ ! -f $AUTOENV_AUTH_FILE ]]; then
-  echo -n > $AUTOENV_AUTH_FILE
+  touch $AUTOENV_AUTH_FILE
 fi
 
 autoload -Uz add-zsh-hook

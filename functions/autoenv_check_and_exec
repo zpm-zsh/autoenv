@@ -6,7 +6,7 @@ zmodload zsh/param/private
 local IFS=$' \t\n'
 
 local hash
-if (( $+commands[shasum] )) &> /dev/null; then
+if (( $+commands[shasum] )); then
   hash=$(shasum "$1" | cut -d' ' -f 1)
 else
   hash=$(sha1sum "$1" | cut -d' ' -f 1)
